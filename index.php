@@ -186,40 +186,7 @@ if (isLoggedIn()) {
       padding: 0 12px;
     }
 
-    .demo-bar {
-      margin-top: 16px;
-      padding: 10px 14px;
-      background: #f8fafc;
-      border: 1px dashed var(--border-color);
-      border-radius: var(--radius-md);
-      font-size: 0.775rem;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
 
-    .demo-buttons {
-      display: flex;
-      gap: 8px;
-    }
-
-    .demo-btn {
-      flex: 1;
-      padding: 4px 8px;
-      font-size: 0.75rem;
-      border-radius: var(--radius-xs);
-      background: #ffffff;
-      border: 1px solid var(--border-color);
-      cursor: pointer;
-      font-weight: 600;
-      color: var(--text-secondary);
-      transition: all 0.15s ease;
-    }
-    .demo-btn:hover {
-      background: var(--brand-blue-light);
-      color: var(--brand-blue);
-      border-color: var(--brand-blue-border);
-    }
 
     @media (max-width: 768px) {
       .login-container {
@@ -306,21 +273,8 @@ if (isLoggedIn()) {
         <span><?= icon('shield', '', 16) ?> Login as Administrator</span>
       </button>
 
-      <!-- 1-Click Demo Fill Bar for Thesis Defense Presentation -->
-      <div class="demo-bar">
-        <span style="font-weight: 700; color: #475569;">Quick Demo Accounts:</span>
-        <div class="demo-buttons">
-          <button type="button" class="demo-btn" onclick="fillStudentDemo()">
-            <?= icon('user', '', 13) ?> Juan Dela Cruz (Student)
-          </button>
-          <button type="button" class="demo-btn" onclick="fillAdminDemo()">
-            <?= icon('shield', '', 13) ?> Admin User (Admin)
-          </button>
-        </div>
-      </div>
-
-      <div style="text-align: center; margin-top: 18px; font-size: 0.8rem; color: var(--text-muted);">
-        Don't have an account? <a href="javascript:void(0)" onclick="showToast('Student accounts are provisioned via SNSU registrar portal. Please use demo credentials.', 'info', 'Account Registration')" style="color: var(--brand-blue); font-weight: 600;">Contact Administrator</a>
+      <div style="text-align: center; margin-top: 24px; font-size: 0.8rem; color: var(--text-muted);">
+        Don't have an account? <a href="javascript:void(0)" onclick="showToast('Student accounts are provisioned via the SNSU Registrar portal. Please coordinate with the MIS Office or your Department Dean.', 'info', 'Account Registration')" style="color: var(--brand-blue); font-weight: 600;">Contact Administrator</a>
       </div>
     </form>
   </div>
@@ -352,18 +306,6 @@ if (isLoggedIn()) {
       submitBtn.style.backgroundColor = 'var(--brand-blue)';
       submitBtn.style.borderColor = 'var(--brand-blue)';
     }
-  }
-
-  function fillStudentDemo() {
-    if (isAdministrator) toggleRoleMode();
-    document.getElementById('identifier').value = 'juan.delacruz@student.com';
-    document.getElementById('password').value = 'student123';
-  }
-
-  function fillAdminDemo() {
-    if (!isAdministrator) toggleRoleMode();
-    document.getElementById('identifier').value = 'admin@school.edu';
-    document.getElementById('password').value = 'admin123';
   }
 
   function togglePasswordVisibility() {
