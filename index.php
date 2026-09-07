@@ -269,8 +269,9 @@ if (isLoggedIn()) {
         <span>OR</span>
       </div>
 
-      <button type="button" class="btn btn-secondary" style="width: 100%;" id="toggleRoleBtn" onclick="toggleRoleMode()">
-        <span><?= icon('shield', '', 16) ?> Login as Administrator</span>
+      <button type="button" class="btn btn-secondary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;" id="toggleRoleBtn" onclick="toggleRoleMode()">
+        <span id="toggleRoleIcon"><?= icon('shield', '', 16) ?></span>
+        <span id="toggleRoleText">Login as Administrator</span>
       </button>
 
       <div style="text-align: center; margin-top: 24px; font-size: 0.8rem; color: var(--text-muted);">
@@ -283,28 +284,40 @@ if (isLoggedIn()) {
 <script>
   let isAdministrator = false;
 
+  const studentIconSvg = <?= json_encode(icon('user', '', 16)) ?>;
+  const adminIconSvg   = <?= json_encode(icon('shield', '', 16)) ?>;
+  const eyeSvg         = <?= json_encode(icon('eye', '', 16)) ?>;
+  const eyeOffSvg      = <?= json_encode(icon('eye-off', '', 16)) ?>;
+
   function toggleRoleMode() {
     isAdministrator = !isAdministrator;
-    const roleInput = document.getElementById('loginRole');
-    const toggleBtn = document.getElementById('toggleRoleBtn');
-    const loginTitle = document.getElementById('loginTitle');
-    const loginSubtitle = document.getElementById('loginSubtitle');
-    const submitBtn = document.getElementById('submitBtn');
+    const roleInput   = document.getElementById('loginRole');
+    const toggleIcon  = document.getElementById('toggleRoleIcon');
+    const toggleText  = document.getElementById('toggleRoleText');
+    const loginTitle  = document.getElementById('loginTitle');
+    const loginSub    = document.getElementById('loginSubtitle');
+    const submitBtn   = document.getElementById('submitBtn');
 
     if (isAdministrator) {
-      roleInput.value = 'admin';
-      loginTitle.textContent = 'Administrator Portal';
-      loginSubtitle.textContent = 'Sign in with administrative privileges';
-      toggleBtn.innerHTML = '<span><?= icon("user", "", 16) ?> Login as Student</span>';
-      submitBtn.style.backgroundColor = '#0e2246';
-      submitBtn.style.borderColor = '#0e2246';
+      if (roleInput) roleInput.value = 'admin';
+      if (loginTitle) loginTitle.textContent = 'Administrator Portal';
+      if (loginSub) loginSub.textContent = 'Sign in with administrative privileges';
+      if (toggleIcon) toggleIcon.innerHTML = studentIconSvg;
+      if (toggleText) toggleText.textContent = 'Login as Student';
+      if (submitBtn) {
+        submitBtn.style.backgroundColor = '#0e2246';
+        submitBtn.style.borderColor = '#0e2246';
+      }
     } else {
-      roleInput.value = 'student';
-      loginTitle.textContent = 'Welcome Back!';
-      loginSubtitle.textContent = 'Please sign in to continue';
-      toggleBtn.innerHTML = '<span><?= icon("shield", "", 16) ?> Login as Administrator</span>';
-      submitBtn.style.backgroundColor = 'var(--brand-blue)';
-      submitBtn.style.borderColor = 'var(--brand-blue)';
+      if (roleInput) roleInput.value = 'student';
+      if (loginTitle) loginTitle.textContent = 'Welcome Back!';
+      if (loginSub) loginSub.textContent = 'Please sign in to continue';
+      if (toggleIcon) toggleIcon.innerHTML = adminIconSvg;
+      if (toggleText) toggleText.textContent = 'Login as Administrator';
+      if (submitBtn) {
+        submitBtn.style.backgroundColor = 'var(--brand-blue)';
+        submitBtn.style.borderColor = 'var(--brand-blue)';
+      }
     }
   }
 
@@ -314,10 +327,10 @@ if (isLoggedIn()) {
     if (!pwd || !btn) return;
     if (pwd.type === 'password') {
       pwd.type = 'text';
-      btn.innerHTML = '<?= icon("eye-off", "", 16) ?>';
+      btn.innerHTML = eyeOffSvg;
     } else {
       pwd.type = 'password';
-      btn.innerHTML = '<?= icon("eye", "", 16) ?>';
+      btn.innerHTML = eyeSvg;
     }
   }
 </script>
