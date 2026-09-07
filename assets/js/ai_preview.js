@@ -19,8 +19,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Critical hazard keywords
   const criticalKeywords = [
-    'exposed wire', 'exposed wiring', 'wire', 'spark', 'sparks', 'sparking',
-    'fire', 'smoke', 'shock', 'electric', 'short circuit', 'electrocution',
+    'exposed wire', 'exposed wiring', 'live wire', 'loose wire', 'bare wire', 'electrical wire', 'wiring',
+    'spark', 'sparks', 'sparking',
+    'fire', 'smoke', 'shock', 'electric shock', 'short circuit', 'electrocution',
     'water leak', 'leak near', 'flooding', 'collapse', 'ceiling collapsed',
     'medical emergency', 'injured', 'injury', 'bleeding', 'explosion', 'toxic',
     'gas leak', 'danger', 'hazard', 'immediate danger', 'life-threatening'

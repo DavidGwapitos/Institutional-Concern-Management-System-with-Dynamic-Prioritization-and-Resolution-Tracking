@@ -89,6 +89,15 @@ require_once __DIR__ . '/../includes/sidebar.php';
         <label class="form-label" for="attachment">Attachment (Optional)</label>
         <input type="file" name="attachment" id="attachment" class="form-control" accept=".jpg,.jpeg,.png,.pdf,.docx">
         <span class="form-help">Supported files: JPG, PNG, PDF, DOCX (Max 5MB). Helpful for facility defects or documentation evidence.</span>
+
+        <!-- Live Image Preview Thumbnail -->
+        <div id="imagePreviewWrap" style="display: none; margin-top: 12px;">
+          <div style="position: relative; display: inline-block; max-width: 320px; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); background: #f8fafc;">
+            <img id="imagePreviewImg" src="" alt="Selected Preview" style="width: 100%; max-height: 200px; object-fit: cover; display: block;">
+            <button type="button" id="removeImageBtn" style="position: absolute; top: 8px; right: 8px; background: rgba(15, 23, 42, 0.75); color: #fff; border: none; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1rem; line-height: 1;" title="Remove image">&times;</button>
+          </div>
+          <div class="text-xs text-muted" style="margin-top: 4px;">Selected image preview</div>
+        </div>
       </div>
 
       <div style="margin-top: 24px;">
@@ -101,5 +110,37 @@ require_once __DIR__ . '/../includes/sidebar.php';
 </div>
 
 <script src="../assets/js/ai_preview.js"></script>
+<script>
+  // Live Image File Preview in Submission Form
+  const fileInput = document.getElementById('attachment');
+  const previewWrap = document.getElementById('imagePreviewWrap');
+  const previewImg = document.getElementById('imagePreviewImg');
+  const removeBtn = document.getElementById('removeImageBtn');
+
+  if (fileInput && previewWrap && previewImg) {
+    fileInput.addEventListener('change', function() {
+      const file = this.files[0];
+      if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          previewImg.src = e.target.result;
+          previewWrap.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      } else {
+        previewWrap.style.display = 'none';
+        previewImg.src = '';
+      }
+    });
+
+    if (removeBtn) {
+      removeBtn.addEventListener('click', function() {
+        fileInput.value = '';
+        previewWrap.style.display = 'none';
+        previewImg.src = '';
+      });
+    }
+  }
+</script>
 
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>

@@ -124,10 +124,21 @@ $isResolved   = ($currentStatus === 'Resolved');
       <div class="concern-description-text"><?= nl2br(e($concern['description'])) ?></div>
 
       <?php if (!empty($concern['attachment_path'])): ?>
+        <?php 
+          $attExt = strtolower(pathinfo($concern['attachment_path'], PATHINFO_EXTENSION));
+          $isImage = in_array($attExt, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+        ?>
         <div style="margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--border-color);">
-          <span class="meta-label" style="display: block; margin-bottom: 6px;">Attachment</span>
-          <a href="../<?= e($concern['attachment_path']) ?>" target="_blank" class="attachment-preview-card">
-            <?= icon('paperclip', '', 20) ?>
+          <span class="meta-label" style="display: block; margin-bottom: 8px;">Attachment / Photographic Evidence</span>
+          <?php if ($isImage): ?>
+            <div style="max-width: 480px; margin-bottom: 12px; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); background: #f8fafc;">
+              <a href="../<?= e($concern['attachment_path']) ?>" target="_blank" title="Click to view full image in new tab">
+                <img src="../<?= e($concern['attachment_path']) ?>" alt="Concern Evidence Photo" style="width: 100%; max-height: 280px; object-fit: cover; display: block; transition: opacity 0.2s ease;">
+              </a>
+            </div>
+          <?php endif; ?>
+          <a href="../<?= e($concern['attachment_path']) ?>" target="_blank" class="attachment-preview-card" style="display: inline-flex;">
+            <?= icon($isImage ? 'camera' : 'paperclip', '', 20) ?>
             <span><?= e(basename($concern['attachment_path'])) ?></span>
             <span class="text-xs text-muted">(Click to view/download)</span>
           </a>

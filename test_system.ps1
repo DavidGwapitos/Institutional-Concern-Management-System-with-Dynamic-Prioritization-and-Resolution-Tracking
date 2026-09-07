@@ -63,7 +63,7 @@ if ($accountCheck -eq 1 -and $concernCount -ge 10) {
 }
 
 # 6. Check Syntax of all PHP files
-Write-Host "[6/6] Checking PHP Syntax of all project files..." -NoNewline
+Write-Host "[6/7] Checking PHP Syntax of all project files..." -NoNewline
 $syntaxErrors = 0
 Get-ChildItem -Path . -Recurse -Filter "*.php" | ForEach-Object {
     $out = php -l $_.FullName 2>&1
@@ -78,8 +78,13 @@ if ($syntaxErrors -eq 0) {
     Write-Host " [FAIL] Found $syntaxErrors files with syntax errors" -ForegroundColor Red
 }
 
+# 7. Run Comprehensive 21-Point End-to-End Test Suite
+Write-Host "[7/7] Launching 21-Point End-to-End Feature & Image Upload Test Suite..." -ForegroundColor Cyan
+php test_suite.php
+
 Write-Host "`n==========================================================" -ForegroundColor Cyan
 Write-Host "  SYSTEM READY AT: http://127.0.0.1:8000" -ForegroundColor Green
 Write-Host "  Demo Student: juan.delacruz@student.com / student123" -ForegroundColor Yellow
 Write-Host "  Demo Admin:   admin@school.edu / admin123" -ForegroundColor Yellow
 Write-Host "==========================================================" -ForegroundColor Cyan
+
