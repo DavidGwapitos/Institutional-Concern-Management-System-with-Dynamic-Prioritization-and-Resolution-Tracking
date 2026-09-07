@@ -10,7 +10,7 @@ $profileUrl = ($user && $user['role'] === 'admin') ? $rootPrefix . 'admin/profil
 <header class="top-header">
   <div style="display: flex; align-items: center;">
     <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
-      <svg class="svg-icon" style="width: 22px; height: 22px;" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      <?= icon('menu', '', 22) ?>
     </button>
     <a href="<?= ($user && $user['role'] === 'admin') ? $rootPrefix . 'admin/dashboard.php' : $rootPrefix . 'student/dashboard.php' ?>" class="header-brand">
       <div class="brand-emblem">ICMS</div>

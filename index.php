@@ -2,13 +2,11 @@
 // index.php - Login Page (Figure 1 of Prototype)
 require_once __DIR__ . '/config/db.php';
 require_once __DIR__ . '/includes/helpers.php';
+require_once __DIR__ . '/includes/auth_check.php';
 
-if (!empty($_SESSION['user_id']) && !empty($_SESSION['role'])) {
-    if ($_SESSION['role'] === 'admin') {
-        header('Location: admin/dashboard.php');
-    } else {
-        header('Location: student/dashboard.php');
-    }
+if (isLoggedIn()) {
+    $target = ($_SESSION['role'] === 'admin') ? 'admin/dashboard.php' : 'student/dashboard.php';
+    header("Location: {$target}");
     exit;
 }
 ?>
@@ -283,9 +281,12 @@ if (!empty($_SESSION['user_id']) && !empty($_SESSION['role'])) {
 
       <div class="form-group">
         <label class="form-label" for="password">Password</label>
-        <div class="input-icon-wrap">
+        <div class="input-icon-wrap" style="position: relative;">
           <span class="field-icon"><?= icon('lock', '', 16) ?></span>
-          <input type="password" name="password" id="password" class="form-control" placeholder="Enter your password" required>
+          <input type="password" name="password" id="password" class="form-control" style="padding-right: 42px;" placeholder="Enter your password" required>
+          <button type="button" id="togglePasswordBtn" onclick="togglePasswordVisibility()" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #94a3b8; padding: 4px; display: flex; align-items: center;" title="Show/Hide Password" aria-label="Toggle password visibility">
+            <?= icon('eye', '', 16) ?>
+          </button>
         </div>
       </div>
 
@@ -363,6 +364,19 @@ if (!empty($_SESSION['user_id']) && !empty($_SESSION['role'])) {
     if (!isAdministrator) toggleRoleMode();
     document.getElementById('identifier').value = 'admin@school.edu';
     document.getElementById('password').value = 'admin123';
+  }
+
+  function togglePasswordVisibility() {
+    const pwd = document.getElementById('password');
+    const btn = document.getElementById('togglePasswordBtn');
+    if (!pwd || !btn) return;
+    if (pwd.type === 'password') {
+      pwd.type = 'text';
+      btn.innerHTML = '<?= icon("eye-off", "", 16) ?>';
+    } else {
+      pwd.type = 'password';
+      btn.innerHTML = '<?= icon("eye", "", 16) ?>';
+    }
   }
 </script>
 
