@@ -1,5 +1,5 @@
 <?php
-// actions/auth_action.php - Authentication Processor (Login & Session)
+// actions/auth_action.php - Authentication Processor with Strict Role Boundary Enforcement
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../includes/helpers.php';
 require_once __DIR__ . '/../includes/auth_check.php';
@@ -80,16 +80,43 @@ function attemptAdminAuth(PDO $pdo, string $identifier, string $password): bool 
     return false;
 }
 
-// Check preferred role first, fallback to alternate role
+// Strict Role Enforcement: No cross-role unauthorized logins
 if ($asRole === 'admin') {
-    if (attemptAdminAuth($pdo, $identifier, $password)) exit;
-    if (attemptStudentAuth($pdo, $identifier, $password)) exit;
-} else {
-    if (attemptStudentAuth($pdo, $identifier, $password)) exit;
-    if (attemptAdminAuth($pdo, $identifier, $password)) exit;
-}
+    // Administrator Portal
+    if (attemptAdminAuth($pdo, $identifier, $password)) {
+        exit;
+    }
 
-// If no credentials matched
-setFlash('error', 'Invalid login credentials. Please check your username/email and password.');
-header('Location: ../index.php');
-exit;
+    // Check if user is actually a student attempting to log in on the admin portal
+    $checkStudent = $pdo->prepare("SELECT password FROM students WHERE email = :email OR student_no = :student_no LIMIT 1");
+    $checkStudent->execute(['email' => $identifier, 'student_no' => $identifier]);
+    $sRow = $checkStudent->fetch();
+    if ($sRow && password_verify($password, $sRow['password'])) {
+        setFlash('warning', 'This account is registered as a Student. Please click "Login as Student" to access the Student Portal.');
+        header('Location: ../index.php');
+        exit;
+    }
+
+    setFlash('error', 'Invalid administrator credentials. Please check your email and password.');
+    header('Location: ../index.php');
+    exit;
+} else {
+    // Student Portal (default)
+    if (attemptStudentAuth($pdo, $identifier, $password)) {
+        exit;
+    }
+
+    // Check if user is actually an administrator attempting to log in on the student portal
+    $checkAdmin = $pdo->prepare("SELECT password FROM administrators WHERE email = :email LIMIT 1");
+    $checkAdmin->execute(['email' => $identifier]);
+    $aRow = $checkAdmin->fetch();
+    if ($aRow && password_verify($password, $aRow['password'])) {
+        setFlash('warning', 'This account is registered as an Administrator. Please click "Login as Administrator" to access the Administrator Portal.');
+        header('Location: ../index.php');
+        exit;
+    }
+
+    setFlash('error', 'Invalid student credentials. Please check your email/student number and password.');
+    header('Location: ../index.php');
+    exit;
+}
